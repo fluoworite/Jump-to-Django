@@ -30,10 +30,14 @@ class AnswerCreateView(CreateView):
         answer.question = question
         answer.create_date = timezone.now()
         answer.save()
-        return redirect('pybo:detail', question_id=question.pk)
+        return redirect('pybo:detail', pk=question.pk)
+
+    def form_invalid(self, form):
+        context = {'question': get_object_or_404(Question, pk=self.kwargs.get('question_id')), 'form': form}
+        return self.render_to_response(context)
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseNotAllowed('Only POST is possible.')
+        return HttpResponseNotAllowed(['POST'])
 
 class QuestionCreateView(CreateView):
     model = Question
