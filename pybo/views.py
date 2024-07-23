@@ -1,12 +1,8 @@
-from urllib import request
-
-import requests
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView
-from django.core.paginator import Paginator
 
 from . import form
 from .form import AnswerForm, QuestionForm
