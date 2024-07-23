@@ -13,6 +13,11 @@ class QuestionListView(ListView):
     template_name = 'pybo/question_list.html'
     context_object_name = 'question_list'
     ordering = ['-create_date']
+    paginate_by = 10
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_obj'] = context.get('page_obj')
+        return context
 
 class QuestionDetailView(DetailView):
     model = Question
@@ -30,7 +35,8 @@ class AnswerCreateView(CreateView):
         answer.question = question
         answer.create_date = timezone.now()
         answer.save()
-        return redirect('pybo:detail', pk=question.pk)
+        return redirect('pybo:detail', pk=question.id)
+
 
     def form_invalid(self, form):
         context = {'question': get_object_or_404(Question, pk=self.kwargs.get('question_id')), 'form': form}
@@ -50,3 +56,6 @@ class QuestionCreateView(CreateView):
         question.create_date = timezone.now()
         question.save()
         return super().form_valid(form)
+
+def index(request):
+    return QuestionListView.as_view()(request)
